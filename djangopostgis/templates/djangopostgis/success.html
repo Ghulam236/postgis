@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- {{var}} -->
+<div class ="row">
+    <div class ="col-lg-4 text-white mt-4">
+    <form method="POST" action ="/map_name" enctype="multipart/form-data">
+        {% csrf_token %}
+       
+         
+        <label for="colname1">INDIA:</label>
+        
+        <select name="state_name" class="custom-select" id="colname1">
+       
+        <option value="" selected="selected">Select states from dropdown</option>
+        {% for x in data %}
+        
+        <option value="{{ x }}">
+               {{ x }}
+              
+        </option>
+        {% endfor %}
+        </select><br>
+        <input style="margin-left: 33px;" type="submit" value="Submit">
+    </form>
+    <!-- <form method="POST" action ="/" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" name="docfile"><br><br>
+        <input type="submit" value="Submit">
+    </form> -->
+
+    </div>
+    <div class ="col-lg-8 text-white mt-4">
+           
+        <div style ="width: 750px;
+        border: 5px solid green;
+        padding: 5px;
+        margin-left: 450px;
+        background-repeat : no-repeat;">
+    <!-- {{states}} -->
+      {{m|safe}}
+    </div>
+    </div>
+</div>
+
+</body>
+</html>
