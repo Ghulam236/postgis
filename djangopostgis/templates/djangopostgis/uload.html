@@ -11,7 +11,7 @@
         <div class ="col-lg-4 text-white mt-4">
             <form method="POST" action ="" enctype="multipart/form-data">
                 {% csrf_token %}
-                <input type="file" name="docfile"><br><br>
+                <input type="file" name="uploadfiles" autocomplete="off" required multiple><br><br>
                 <input type="submit" value="Submit">
             </form>
         </div>
@@ -23,7 +23,7 @@
             margin-left: 450px;
             background-repeat : no-repeat;">
         <!-- {{states}} -->
-          <!-- {{m|safe}} -->
+          {{m|safe}}
     </div>
     </div>
     </body>

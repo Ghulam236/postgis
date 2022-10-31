@@ -22,9 +22,12 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('country_states', views.country_states, name='country_states'),
     path('map_name', views.map_name),
+    path('map2_name', views.map2_name),
     path('upload_shapefile', views.upload_shapefile),
     path('show_onmap', views.show_onmap) ,
     path('readfile', views.readfile),
-    path('india_district', views.india_district)    
+    path('india_district', views.india_district, name ='india_district'),   
+    path('csv_to_geojson', views.csv_to_geojson, name ='csv_to_geojson'),
+    path('uploadshp', views.uploadshp, name ='uploadshp')   
 ]  
 

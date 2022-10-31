@@ -47,4 +47,9 @@ class Indstates(models.Model):
     # varname_2 = models.CharField(max_length=150)
     geom = models.MultiPolygonField(srid=4326)
     def __unicode__(self):
+    #   return  self.fields['name_2']
         return self.Indstates
+
+# join tables...
+# class jointable(models.Model):
+

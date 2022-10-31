@@ -8,14 +8,24 @@ import os
 from django.core.files.storage import FileSystemStorage
 import shapefile
 import geopandas as gpd
+import pandas as pd
+from .models import Indstates
+from collections import OrderedDict
+import csv
 
 
 
 
 global geometry_coordinate, states_data
+global dist_data, district_geometry_crs,state_data_id
+# global varr
+global geojson_data1,geojson_data2
 # Create your views here.
 def map_name(request):
-    state_name = request.POST.get('state_name')
+    state_name = request.POST.get("state_name")
+    print(state_name)
+    # state_name1 = request.POST.get('state_name1')
+    # ind1 =states_data.index(state_name1)
     # print(state_name)
     ind = states_data.index(state_name)
     # data_1 = {}
@@ -50,7 +60,7 @@ def map_name(request):
             }
         ]
         }
-    print(data_1)
+    # print(data_1)
     # json_data =json.dumps(data_1)
     # print(json_data)
     # print(type(json_data))
@@ -84,50 +94,75 @@ def home(request):
     context= {
         'm':m
     }
-    return render(request, 'djangopostgis/home.html', context)
+    return render(request, 'djangopostgis/home1.html', context)
 # from django.db.models import Q
 def country_states(request):
+    global state_data_id
     global data_to_json
     # id_tuple = (3,4,5)
     # states =serialize('geojson',country.objects.filter(id__in=id_tuple))
     states =serialize('geojson',country.objects.all())
+    # states =country.objects.all()
+    
     states =json.loads(states)
     global states_data
+    global dist_data
     states_data = []
+    state_data_id = []
+    dist_data = []
+    dist_data_id1 = []
+    dist_data_id2 = []
     global geometry_coordinate
     geometry_coordinate = []
     
     for x in states['features']:
-        # print(x['properties']['name_1'])
+       
+
         states_data.append(x['properties']['name_1'])
+        state_data_id.append(x['properties']['id_1'])
         geometry_coordinate.append(x['geometry']['coordinates'])
-        
-    print(states_data)
-    # # print(geometry_coordinate)
+   
     my_dict = {}
-    for i in range(len(states_data)):
-        # print(i)
-        # temp = {states_data[i]: geometry_coordinate[i]}
-        # if(i==0):
-        my_dict[states_data[i]]=geometry_coordinate[i]
 
-        # else:
-        #     break    
-        # my_dict[states_data[0]].append(geometry_coordinate[0])
     
-    # all_data =[my_dict]
-    # print(type())
-    #var = (states['features'][0]['properties']['name_1'][0])
-    # var = states['features']
-    # print(type(var))
-    # for x in var:
-    # print(var)
 
-    # geojson= states["type"]
-    # for x in geojson:
-    #     keys =x.keys()
-    #     print(keys)
-    # lyr =states[0]
+    for i in range(len(states_data)):
+        
+        my_dict[states_data[i]]=geometry_coordinate[i]
+        # my_dict[states_data[i]]={
+        #         "id_1":state_data_id[i],
+        #         "geometry_coordinate":geometry_coordinate[i]
+        #     }
+    district =serialize('geojson',Indstates.objects.all())
+    #################
+    # name_1 ="Bihar"
+    # getstates =country.objects.get(name1=name_1)
+    # # name_1 = request.GET.get('country')
+    # # name_1 = "Uttar Pradesh"
+    # name2 = Indstates.objects.filter(name_1=getstates)
+    # print(name2)
+    ##################
+    district =json.loads(district)
+    global district_names
+    global district_geometry_crs
+    district_names =[]
+    district_geometry_crs =[]
+    for y in district['features']:
+        dist_data.append(y['properties']['name_2'])
+        # dist_data_id1.append(y['properties']['id_1'])
+        # dist_data_id2.append(y['properties']['id_2'])
+
+        district_geometry_crs.append(y['geometry']['coordinates'])
+   
+
+    dist_dict={}
+    for i in range(len(states_data)):
+        
+        dist_dict[dist_data[i]]=district_geometry_crs[i]
+    ######optinal######
+    # sorted_keys =   dist_dict.items()
+    # new_values =sorted(dist_dict.keys())
+    #####optinal######
     # temp = {
     #     "type":"FeatureCollection",
     #     "crs":{
@@ -156,6 +191,44 @@ def country_states(request):
     #         }
     #     ]
     #     }
+    ####### district format
+    #     {
+    #    "type":"FeatureCollection",
+    #    "crs":{
+    #       "type":"name",
+    #       "properties":{
+    #          "name":"EPSG:4326"
+    #       }
+    #    },
+    #    "features":[
+    #       {
+    #          "type":"Feature",
+    #          "properties":{
+    #             "id_0":105,
+    #             "iso":"IND",
+    #             "name_0":"India",
+    #             "id_1":1,
+    #             "name_1":"Andaman and Nicobar",
+    #             "id_2":1,
+    #             "name_2":"Andaman Islands",
+    #             "type_2":"District",
+    #             "engtype_2":"District",
+    #             "pk":"2"
+    #          },
+    #          "geometry":{
+    #             "type":"MultiPolygon",
+    #             "coordinates":[
+    #                [
+    #                   [
+    #                      [
+                            
+    #                      ]
+    #                   ]
+    #                ]
+    #             ]
+    #          }
+    #       }
+    #    ]
     # objctdata = json.loads(temp)
     # print(objctdata)    
     # print(temp['features'])    
@@ -163,6 +236,7 @@ def country_states(request):
 
     # print(my_dict.keys())
     # final_data=json.dumps(my_dict)
+    # return redirect(india_district)
     m= folium.Map(location=(3, -0.219), zoom_start =2)
     folium.GeoJson(states).add_to(m)
     draw = plugins.Draw(export=True)
@@ -176,64 +250,320 @@ def country_states(request):
     # }
     # print(states)
     # return render(request, 'djangopostgis/success.html', {'states':states,  'states_data': states_data, 'm':m})
-    return render(request, 'djangopostgis/success.html',{'m':m,'data':my_dict})
-    # return render(request, 'djangopostgis/success.html',{'m':my_dict})
+    return render(request, 'djangopostgis/success.html',{'m':m,'data':my_dict, 'dist_data':dist_dict})
+    # return render(request, 'djangopostgis/success.html',{'m':m,'data':states})
 
 def upload_shapefile(request):
-     
+    global file_directory,geojson_data1
+
+    
    
     if request.method =='POST':
         uploaded_file =request.FILES['docfile']
-        print(os.path.realpath(os.path.join(os.path.dirname(__file__))))
+        # print(os.path.realpath(os.path.join(os.path.dirname(__file__))))
         
         # if uploaded_file.name.endswith('.xlsx'):
         if uploaded_file.name.endswith('.shp'):
             #save thre file in medisa storage
             savefile = FileSystemStorage()
             d = os.getcwd()
+            # f = os.path.abspath("mydir/myfile.shp")
             # this is the name of your csv file
-            file_directory = savefile.save(d+'/data2//'+uploaded_file.name, uploaded_file)
+            name = savefile.save(d+'/data2//'+uploaded_file.name, uploaded_file)
+            # name = savefile.save(f+'/data2//'+uploaded_file.name, uploaded_file)
+            # os.path.abspath(name)
 
            
             # print(d)
-            # file_directory =   name
-            # print(file_directory)
-            # readfile(file_directory)
-            # return redirect(show_onmap(file_directory))
-    # m= folium.Map(location=(3, -0.219), zoom_start =2)
-    # m =m._repr_html_()
-    # return render(request,'djangopostgis/uload.html',{'m':m})
-    return render(request,'djangopostgis/uload.html')
-            # readfile(file_directory)
-            # return redirect(data_view_onmap)
+            file_directory =name
+            print("###############")
+            print(file_directory)
+            print("###############")
+            # myshpfile = gpd.read_file('file_directory')
+            # myshpfile.to_file('myJson.geojson', driver='GeoJSON')
+
+            geojson_data1 = readfile(file_directory)
             
-def show_onmap(request, shape):
+            return redirect(show_onmap)
+            # m= folium.Map(location=(3, -0.219), zoom_start =2)
+            # folium.GeoJson(geojson_data1).add_to(m)
+            # if(geojson_data1):
+            #     return render(request,'djangopostgis/uload.html',{'m':m,'geojson_data1':geojson_data1})
+            # else:
+            #     return render(request,'djangopostgis/uload.html')
+    return render(request,'djangopostgis/uload.html')
+   
     # states1 = serialize('geojson', shape)
+    # m= folium.Map(location=(3, -0.219), zoom_start =2)
+def show_onmap(request):
+    global geojson_data1,geojson_data2
     m= folium.Map(location=(3, -0.219), zoom_start =2)
-    # folium.GeoJson(states1).add_to(m)
+    # myshpfile = gpd.read_file('file_directory')
+    # myshpfile.to_file('myJson.geojson', driver='GeoJSON')
+    # print(type(myshpfile))
+    # folium.GeoJson(geojson_data1).add_to(m)
+    folium.GeoJson(geojson_data2).add_to(m)
+
     draw = plugins.Draw(export=True)
     draw.add_to(m)
     m =m._repr_html_()
     context1= {
         # 'm':m
     }
-    return render(request,'djangopostgis/uload.html',{'m':m})
+    # return render(request,'djangopostgis/uload.html',{'m':m,'geojson_data1':geojson_data1})
+    return render(request,'djangopostgis/uload.html',{'m':m,'geojson_data2':geojson_data2})
 def readfile(filename):
+    global geojson_data
+    # li = []
+    
+    # reader = csv.DictReader(filename)
+    # print("###################################")
+    # print(reader)
+    # print("###################################")
+    # for row in reader:
+    #     d = OrderedDict()
+    #     d['type'] = 'Feature'
+    #     d['geometry'] = {
+    #         'type': 'Point',
+    #         'coordinates': [float(row['latitude']), float(row['longitude'])]
+    #     }
+    #     li.append(d)
+
+    # d = OrderedDict()
+    # d['type'] = 'FeatureCollection'
+    # d['features'] = li
+
+    # with open('output.json','w') as f:
+    #     json.dump(d,f,indent=2)
+    #     print(d)
+    # global dataDf
+    # # my_file =pd.read_excel(filename)
+    # my_file =pd.read_csv(filename)
+    # dataDf =pd.DataFrame(data=my_file, index=None)
+    # print(dataDf)
+    # global geojson_data
+
+    geojson_data = shapefile.Reader(filename).__geo_interface__
+    return geojson_data
+    # #  global varr
+    #  myshpfile = gpd.read_file(filename)
+    #  myshpfile.to_file('myJson.geojson', driver='GeoJSON')
+    # print(geojson_data)
+
+    # #  geojson_data = shapefile.Reader(filename).__geo_interface__
+    # print(type(geojson_data))
 
     # shapefile = gpd.read_file(filename)
     # print(shapefile)
-    shape = shapefile.Reader(filename)
-#first feature of the shapefile
-    feature = shape.shapeRecords()[0]
-    first = feature.shape.__geo_interface__  
-    print(first)
+#     shape = shapefile.Reader(filename)
+# #first feature of the shapefile
+#     feature = shape.shapeRecords()[0]
+#     first = feature.shape.__geo_interface__  
+#     print(first)
 
 def india_district(request):
     district =serialize('geojson',Indstates.objects.all())
+    # name_1 ="Bihar"
+    # getstates =country.objects.get(name=name_1)
+    # name_1 = request.GET.get('country')
+    # name_1 = "Uttar Pradesh"
+    # name2 = Indstates.objects.filter(name_1=getstates)
+    # print(name2)
+    district =json.loads(district)
+    global district_names
+    global district_geometry_crs
+    district_names =[]
+    district_geometry_crs =[]
+    for x in district['features']:
+        district_names.append(x['properties']['name_2'])
+        district_geometry_crs.append(x['geometry']['coordinates'])
+    # print(district_names)
+    # count total number of items in list or tuple or dic or array
+    # print(len(district_names))
+    dist_dict ={}
+    for i in range(len(district_names)):
+        dist_dict[district_names[i]] = district_geometry_crs[i]
+
+    # sorted_keys =   dist_dict.items()
+    new_values =sorted(dist_dict.keys())
+    
+    # print(new_values)
     m= folium.Map(location=(3, -0.219), zoom_start =2)
     folium.GeoJson(district).add_to(m)
     draw = plugins.Draw(export=True)
     draw.add_to(m)
     m =m._repr_html_()
-    return render(request,'djangopostgis/distric.html',{'m':m})
+    # return render(request,'djangopostgis/distric.html',{'m':m, 'district_data':new_values})
+    return render(request,'djangopostgis/success.html',{'district_data':new_values})
+   
+def map2_name(request):
+    global dist_data
+    district_name = request.POST.get('district_name')
+    # print(state_name)
+    ind = dist_data.index(district_name)
+  
+    data_2  ={
+   "type":"FeatureCollection",
+   "crs":{
+      "type":"name",
+      "properties":{
+         "name":"EPSG:4326"
+      }
+   },
+   "features":[
+      {
+         "type":"Feature",
+         "properties":{
+            "id_0":105,
+            "iso":"IND",
+            "name_0":"India",
+            "id_1":1,
+            "name_1":"Andaman and Nicobar",
+            "id_2":1,
+            "name_2":district_name,
+            "type_2":"District",
+            "engtype_2":"District",
+            "pk":"2"
+         },
+         "geometry":{
+            "type":"MultiPolygon",
+            "coordinates":district_geometry_crs[ind]
+               
+         }
+      }
+   ]
+}
+    
+    # {
+    #     "type":"FeatureCollection",
+    #     "crs":{
+    #         "type":"name",
+    #         "properties":{
+    #             "name":"EPSG:4326"
+    #         }
+    #     },
+    #     "features":[
+    #         {
+    #             "type":"Feature",
+    #             "properties":{
+    #                 "name_2":district_name,
+    #                 "name_0":"India",
+    #                 "id_0":105,
+    #                 "iso":"IND",
+    #                 "id_1":1,
+    #                 "type_1":"Union Territor",
+    #                 "engtype_1":"Union Territory",
+    #                 "pk":"3"
+    #             },
+    #             "geometry":{
+    #                 "type":"MultiPolygon",
+    #                 "coordinates":district_geometry_crs[ind]
+    #             }
+    #         }
+    #     ]
+    #     }
+    m= folium.Map(location=(3, -0.219), zoom_start =2)
+   
+    draw = plugins.Draw(export=True)
+    draw.add_to(m)
+    # folium.Marker(
+    # [21.493963918393746, 81.51855520970668]).add_to(m)
+    folium.GeoJson(data_2).add_to(m)
+    # folium.GeoJson(data_to_json).add_to(m)
+  
+    m =m._repr_html_()
+    context= {
+        'm':m
+    }
+    return render(request, 'djangopostgis/final2_map.html', context)
 
+#     {
+#    "type":"FeatureCollection",
+#    "crs":{
+#       "type":"name",
+#       "properties":{
+#          "name":"EPSG:4326"
+#       }
+#    },
+#    "features":[
+#       {
+#          "type":"Feature",
+#          "properties":{
+#             "id_0":105,
+#             "iso":"IND",
+#             "name_0":"India",
+#             "id_1":1,
+#             "name_1":"Andaman and Nicobar",
+#             "id_2":1,
+#             "name_2":"Andaman Islands",
+#             "type_2":"District",
+#             "engtype_2":"District",
+#             "pk":"2"
+#          },
+#          "geometry":{
+#             "type":"MultiPolygon",
+#             "coordinates":[
+#                [
+#                   [
+#                      [
+                        
+#                      ]
+#                   ]
+#                ]
+#             ]
+#          }
+#       }
+#    ]
+# }
+
+def csv_to_geojson(request):
+    li = []
+    with open('static/djangopostgis/file/area1.csv') as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            d = OrderedDict()
+            d['type'] = 'Feature'
+            d['geometry'] = {
+                'type': 'Point',
+                'coordinates': [float(row['lat']), float(row['long'])]
+            }
+            li.append(d)
+
+    d = OrderedDict()
+    d['type'] = 'FeatureCollection'
+    d['features'] = li
+
+    with open('output.json','w') as f:
+        json.dump(d,f,indent=2)
+        print(d)
+def uploadshp(request):
+    global geojson_data2
+    if request.method=="POST":
+        myfile =request.FILES.getlist('uploadfiles')
+        print("###########")
+        print(type(myfile))
+        print("###########")
+        # savefile = FileSystemStorage()
+        # d = os.getcwd()
+        # name=[]
+        # name = savefile.save(d+'/data2//'+myfile.name, myfile)
+        # print(name)
+        savefile = FileSystemStorage()
+        for f in myfile:
+            # list(myfile[0].items())
+           
+            d = os.getcwd()
+        
+            name = savefile.save(d+'/data2//'+f.name, f)
+            file_directory =name
+            # print("###############")
+            # print(file_directory)
+            # print("###############")
+            # myshpfile = gpd.read_file('file_directory')
+            # myshpfile.to_file('myJson.geojson', driver='GeoJSON')
+
+        geojson_data2 = readfile(file_directory)
+            
+        return redirect(show_onmap)
+            # print(f)
+    return render(request,'djangopostgis/uload.html')

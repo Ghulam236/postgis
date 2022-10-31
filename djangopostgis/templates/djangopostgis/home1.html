@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!--  ye link hamesha </head> se upar hi likha zayegaye bootstap ki file h zo humne css folder ke andar rakhi h download karke bootstap ki site seto ye us file ko
+    call kar rha h is link se mygisapp--css--bootstrap.min.css  bas isi line se hmara bootstarp
+     kam karega lekin hame js bhi to chaiye iske liye tumhe <body>ke under link dene honge</body>-->
+    <link rel ="stylesheet" href ="{% static 'mygisapp/css/bootstrap.min.css' %}"> 
+    <!-- ye link uska zo hamne khud ek css file bnayi h style.css to is file ko hmaesha sabse
+    niche hi rakhna h yani zitne bhi link aayenge iske upar aayenge -->
+    <link rel="stylesheet" href ="{% static 'mygisapp/css/style.css' %}">
+</head>
+<body>
+    <!-- yahan se bootstrap ka code shuru h uski site se copy karke likha h -->
+    <nav class="navbar navbar-expand-lg bg-light">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">Navbar</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Link</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Dropdown
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="#">Action</a></li>
+                  <li><a class="dropdown-item" href="#">Another action</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="#">Something else here</a></li>
+                </ul>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link disabled">Disabled</a>
+              </li>
+            </ul>
+            <form class="d-flex" role="search">
+              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+              <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+          </div>
+        </div>
+      </nav>
+      <!-- <div class ="container"> -->
+        <div class ="row">
+          <div class ="col-sm-4 mt-4" style ="border-right: 1px solid burlywood">
+            <form method="POST" enctype="multipart/form-data">
+              {% csrf_token %}
+              <input type="file" name="docfile"><br><br>
+              <input type="submit" value="Submit">
+            </form>
+          <div>
+            {{ list_of_column|safe }}</div>
+            <div>
+            
+              <form method="POST" action ="/data_view_onmap" enctype="multipart/form-data">
+                  {% csrf_token %}
+                 
+                   
+                  <label for="colname1">Latitude:</label>
+                  
+                  <select class="custom-select" id="colname1">
+                 
+                  <option value="" selected="selected">Select latitude from dropdown</option>
+                  {% for x in list_of_column %}
+                  
+                  <option value="{{ x }}">
+                         {{ x }}
+                        
+                  </option>
+                  {% endfor %}
+                  </select><br>
+                  <!-- <input type="text" id="fname" name="fname"><br><br> -->
+                  <label for="colname2">Longitude:</label>
+                  <select style="margin-left: 12px;" class="custom-select" id="colname2"><br>
+                  <option value="" selected="selected">Select longitude from dropdown</option>
+                    {% for x in list_of_column %}
+                    <option value="{{ x }}">
+                           {{ x }}
+
+                    </option>
+                    {% endfor %}
+                    </select><br>
+                  <!-- <input type="text" id="lname" name="lname"><br><br> -->
+                  <label for="colname3">type:</label>
+                  <select style="margin-left: 40px;" class="custom-select" id="colname3">
+                  <option value="" selected="selected">Select type from dropdown</option>
+                    {% for x in list_of_column %}
+                    <option value="{{ x }}">
+                           {{ x }}
+                    </option>
+                    {% endfor %}
+                  </select><br>
+                  <!-- <input type="text" id="lname" name="lname"><br><br> -->
+                  <label for="colname4">Quantity:</label>
+                  <select style="margin-left: 8px;" class="custom-select" id="colname4">
+                  <option value="" selected="selected">Select quantity from dropdown</option>
+                    {% for x in list_of_column %}
+                    <option value="{{ x }}">
+                           {{ x }}
+                    </option>
+                    {% endfor %}
+                  </select><br>
+                  <!-- <input type="text" id="lname" name="lname"><br><br> -->
+                  <label for="colname5">Area  :</label>
+                  <select style="margin-left: 35px;" class="custom-select" id="colname5">
+                  <option value="" selected="selected">Select Area from dropdown</option>
+                    {% for x in list_of_column %}
+                    <option value="{{ x }}">
+                           {{ x }}
+                    </option>
+                    {% endfor %}
+                  </select><br><br><br>
+                 
+                  <!-- <input type="text" id="lname" name="lname"><br><br> -->
+                  <input style="margin-left: 33px;" type="submit" value="Submit">
+              </form>
+              
+          </div>
+
+          </div>
+          <div class ="col-sm-8 text-white mt-4">
+           
+            <div style ="width: 750px;
+            border: 5px solid green;
+            padding: 5px;
+            margin-left: 30px;
+            background-repeat : no-repeat;">
+            <!-- {% if m %} -->
+              {{ m|safe}}
+
+            <!-- {% else %} -->
+              <!-- {{ m2|safe}} -->
+            <!-- {% endif %} -->
+              </div>
+      </div>
+      
+     
+      </div>
+      <!-- </div> -->
+<!-- yahan end ho gya navbar -->
+
+
+
+ <!-- ye teeno file js folder m h  sabse upar jquery ka path aayega ye bhi jquery ki website pr zao
+  usme production walw pr click karo ek page agle tab m khul zayega ab tum usko control a se copy karo ar 
+  zo file tumne bnai h js folder ke andar jquery.js m paste kardo phir save kardo-->
+ <script src ="{% static 'djangopostgis/js/jquery.js' %}"></script>
+ <!-- ye link tumhe bootstrap m hi mil zayega is link ko copy karo ar browser tab m paste kardo
+ puri script khul zayegi ab same contrl a copy and paste to js folder file in popper.js folder
+ m paste kardo -->
+ <script src ="{% static 'djangopostgis/js/popper.js' %}"></script>
+ <!-- ye to wahi file h zab hum bootstap download karte h to do folder milte h ek css ar doosra js
+  js folder ke andar ek file hoti h bootsrap.min.js bas isi ko wahan se uthake js folder m le aao -->
+ <script src ="{% static 'djangopostgis/js/bootstrap.min.js' %}"></script>
+</body>
+</html>

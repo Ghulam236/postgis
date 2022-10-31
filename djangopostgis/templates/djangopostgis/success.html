@@ -1,13 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
+    {% load static %}
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+<!-- <script>
+    $(document).ready(function()
+    {
+       var $statevar =$("#state_name1");
+           $distvar =$("#district_name1");
+           $options =$distvar.find('option');
+           $statevar.on('change',function()
+           {
+                    $distvar.html($options.filter('[value="'+this.value+'"]'));
+
+                }).trigger('change');
+
+           
+           
+     });
+</script> -->
 <body>
     <!-- {{var}} -->
+
 <div class ="row">
     <div class ="col-lg-4 text-white mt-4">
     <form method="POST" action ="/map_name" enctype="multipart/form-data">
@@ -16,14 +35,31 @@
          
         <label for="colname1">INDIA:</label>
         
-        <select name="state_name" class="custom-select" id="colname1">
+        <select id="state_name1" name="state_name" class="custom-select" >
        
-        <option value="" selected="selected">Select states from dropdown</option>
+        <option selected="selected">Select states from dropdown</option>
         {% for x in data %}
         
-        <option value="{{ x }}">
+        <option value="{{x}}">
                {{ x }}
               
+        </option>
+        {% endfor %}
+        </select><br><br><br>
+        <input style="margin-left: 33px;" type="submit" value="Submit">
+        </form>
+        <form method="POST" action ="/map2_name" enctype="multipart/form-data">
+            {% csrf_token %}
+        
+        <label for="colname1">INDIA:</label>
+        
+        <select id="district_name1" name="district_name" class="custom-select" >
+       
+        <option selected="selected">Select district from dropdown</option>
+        {% for y in dist_data %}
+        
+        <option value="{{y}}">
+               {{y}}
         </option>
         {% endfor %}
         </select><br>
@@ -43,11 +79,17 @@
         padding: 5px;
         margin-left: 450px;
         background-repeat : no-repeat;">
-    <!-- {{states}} -->
+        
+       <!-- {{data}} -->
+       <!-- {{dist_data}} -->
       {{m|safe}}
     </div>
     </div>
 </div>
+    
+
+<!-- <script src ="{% static 'djangopostgis/js/jquery.js' %}"></script>
+<script src ="{% static 'djangopostgis/js/popper.js' %}"></script> -->
 
 </body>
 </html>

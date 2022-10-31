@@ -10,16 +10,16 @@
     <!-- {{var}} -->
 <div class ="row">
     <div class ="col-lg-4 text-white mt-4">
-    <form method="POST" action ="/map_name" enctype="multipart/form-data">
+    <form method="POST" action ="/map2_name" enctype="multipart/form-data">
         {% csrf_token %}
        
          
         <label for="colname1">INDIA:</label>
         
-        <select name="state_name" class="custom-select" id="colname1">
+        <select name="district_name" class="custom-select" id="colname1">
        
-        <option value="" selected="selected">Select states from dropdown</option>
-        {% for x in data %}
+        <option value="" selected="selected">Select district from dropdown</option>
+        {% for x in district_data %}
         
         <option value="{{ x }}">
                {{ x }}
@@ -29,12 +29,7 @@
         </select><br>
         <input style="margin-left: 33px;" type="submit" value="Submit">
     </form>
-    <!-- <form method="POST" action ="/" enctype="multipart/form-data">
-        {% csrf_token %}
-        <input type="file" name="docfile"><br><br>
-        <input type="submit" value="Submit">
-    </form> -->
-
+   
     </div>
     <div class ="col-lg-8 text-white mt-4">
            
