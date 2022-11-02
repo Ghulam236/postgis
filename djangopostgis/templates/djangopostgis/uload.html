@@ -9,22 +9,22 @@
 <body>
     <div class ="row">
         <div class ="col-lg-4 text-white mt-4">
-            <form method="POST" action ="" enctype="multipart/form-data">
+            <form method="POST"  enctype="multipart/form-data">
                 {% csrf_token %}
                 <input type="file" name="uploadfiles" autocomplete="off" required multiple><br><br>
                 <input type="submit" value="Submit">
             </form>
         </div>
-        <div class ="col-lg-8 text-white mt-4">
+        <!-- <div class ="col-lg-8 text-white mt-4">
            
             <div style ="width: 750px;
             border: 5px solid green;
             padding: 5px;
             margin-left: 450px;
             background-repeat : no-repeat;">
-        <!-- {{states}} -->
+        {{states}} 
           {{m|safe}}
-    </div>
+    </div> -->
     </div>
     </body>
     <!-- <form method="POST" action ="/map_name" enctype="multipart/form-data">

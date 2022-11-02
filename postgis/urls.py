@@ -27,7 +27,12 @@ urlpatterns = [
     path('show_onmap', views.show_onmap) ,
     path('readfile', views.readfile),
     path('india_district', views.india_district, name ='india_district'),   
-    path('csv_to_geojson', views.csv_to_geojson, name ='csv_to_geojson'),
-    path('uploadshp', views.uploadshp, name ='uploadshp')   
+    # path('csv_to_geojson', views.csv_to_geojson, name ='csv_to_geojson'),
+    path('uploadshp', views.uploadshp, name ='uploadshp'), 
+    #####csv data######
+    path('upload_csv', views.upload_csv, name ='upload_csv'), 
+    path('readfile2', views.readfile2, name ='readfile2'), 
+    # path('service', views.service, name ='service'),  
+    path('data_view_onmap2', views.data_view_onmap2, name ='data_view_onmap2'), 
 ]  
 

@@ -9,7 +9,7 @@
     <!--  ye link hamesha </head> se upar hi likha zayegaye bootstap ki file h zo humne css folder ke andar rakhi h download karke bootstap ki site seto ye us file ko
     call kar rha h is link se mygisapp--css--bootstrap.min.css  bas isi line se hmara bootstarp
      kam karega lekin hame js bhi to chaiye iske liye tumhe <body>ke under link dene honge</body>-->
-    <link rel ="stylesheet" href ="{% static 'mygisapp/css/bootstrap.min.css' %}"> 
+    <link rel ="stylesheet" href ="{% static 'djangopostgis/css/bootstrap.min.css' %}"> 
     <!-- ye link uska zo hamne khud ek css file bnayi h style.css to is file ko hmaesha sabse
     niche hi rakhna h yani zitne bhi link aayenge iske upar aayenge -->
     <link rel="stylesheet" href ="{% static 'mygisapp/css/style.css' %}">
@@ -27,18 +27,26 @@
               <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="#">Home</a>
               </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Link</a>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Upload file
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="{% url 'uploadshp' %}">upload shape file</a></li>
+                  <li><a class="dropdown-item" href="{% url 'upload_csv' %}">upload csv file</a></li>             
+                  
+                </ul>
               </li>
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Dropdown
+                  Choose Layer
                 </a>
                 <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="#">Action</a></li>
-                  <li><a class="dropdown-item" href="#">Another action</a></li>
-                  <li><hr class="dropdown-divider"></li>
-                  <li><a class="dropdown-item" href="#">Something else here</a></li>
+                  <li><a class="dropdown-item" href="{% url 'country_states' %}">Layer 0</a></li>
+                  <li><a class="dropdown-item" href="{% url 'india_district' %}">Layer 1</a></li>             
+                  <li><a class="dropdown-item" href ="{% url 'country_states' %}">Layer 2</li>
+                  <li><a class="dropdown-item" href="{% url 'country_states' %}">Layer 3</a></li>
+                   <!-- <li><hr class="dropdown-divider"></li> -->
                 </ul>
               </li>
               <li class="nav-item">
@@ -54,7 +62,7 @@
       </nav>
       <!-- <div class ="container"> -->
         <div class ="row">
-          <div class ="col-sm-4 mt-4" style ="border-right: 1px solid burlywood">
+          <div class ="col-sm-3 mt-4" style ="border-right: 1px solid burlywood">
             <form method="POST" enctype="multipart/form-data">
               {% csrf_token %}
               <input type="file" name="docfile"><br><br>
@@ -62,75 +70,10 @@
             </form>
           <div>
             {{ list_of_column|safe }}</div>
-            <div>
             
-              <form method="POST" action ="/data_view_onmap" enctype="multipart/form-data">
-                  {% csrf_token %}
-                 
-                   
-                  <label for="colname1">Latitude:</label>
-                  
-                  <select class="custom-select" id="colname1">
-                 
-                  <option value="" selected="selected">Select latitude from dropdown</option>
-                  {% for x in list_of_column %}
-                  
-                  <option value="{{ x }}">
-                         {{ x }}
-                        
-                  </option>
-                  {% endfor %}
-                  </select><br>
-                  <!-- <input type="text" id="fname" name="fname"><br><br> -->
-                  <label for="colname2">Longitude:</label>
-                  <select style="margin-left: 12px;" class="custom-select" id="colname2"><br>
-                  <option value="" selected="selected">Select longitude from dropdown</option>
-                    {% for x in list_of_column %}
-                    <option value="{{ x }}">
-                           {{ x }}
-
-                    </option>
-                    {% endfor %}
-                    </select><br>
-                  <!-- <input type="text" id="lname" name="lname"><br><br> -->
-                  <label for="colname3">type:</label>
-                  <select style="margin-left: 40px;" class="custom-select" id="colname3">
-                  <option value="" selected="selected">Select type from dropdown</option>
-                    {% for x in list_of_column %}
-                    <option value="{{ x }}">
-                           {{ x }}
-                    </option>
-                    {% endfor %}
-                  </select><br>
-                  <!-- <input type="text" id="lname" name="lname"><br><br> -->
-                  <label for="colname4">Quantity:</label>
-                  <select style="margin-left: 8px;" class="custom-select" id="colname4">
-                  <option value="" selected="selected">Select quantity from dropdown</option>
-                    {% for x in list_of_column %}
-                    <option value="{{ x }}">
-                           {{ x }}
-                    </option>
-                    {% endfor %}
-                  </select><br>
-                  <!-- <input type="text" id="lname" name="lname"><br><br> -->
-                  <label for="colname5">Area  :</label>
-                  <select style="margin-left: 35px;" class="custom-select" id="colname5">
-                  <option value="" selected="selected">Select Area from dropdown</option>
-                    {% for x in list_of_column %}
-                    <option value="{{ x }}">
-                           {{ x }}
-                    </option>
-                    {% endfor %}
-                  </select><br><br><br>
-                 
-                  <!-- <input type="text" id="lname" name="lname"><br><br> -->
-                  <input style="margin-left: 33px;" type="submit" value="Submit">
-              </form>
-              
-          </div>
 
           </div>
-          <div class ="col-sm-8 text-white mt-4">
+          <div class ="col-sm-9 text-white mt-4">
            
             <div style ="width: 750px;
             border: 5px solid green;

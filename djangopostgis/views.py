@@ -20,6 +20,8 @@ global geometry_coordinate, states_data
 global dist_data, district_geometry_crs,state_data_id
 # global varr
 global geojson_data1,geojson_data2
+# global dataDf
+global data_data
 # Create your views here.
 def map_name(request):
     state_name = request.POST.get("state_name")
@@ -250,7 +252,7 @@ def country_states(request):
     # }
     # print(states)
     # return render(request, 'djangopostgis/success.html', {'states':states,  'states_data': states_data, 'm':m})
-    return render(request, 'djangopostgis/success.html',{'m':m,'data':my_dict, 'dist_data':dist_dict})
+    return render(request, 'djangopostgis/home1.html',{'m':m,'data':my_dict, 'dist_data':dist_dict})
     # return render(request, 'djangopostgis/success.html',{'m':m,'data':states})
 
 def upload_shapefile(request):
@@ -311,7 +313,8 @@ def show_onmap(request):
         # 'm':m
     }
     # return render(request,'djangopostgis/uload.html',{'m':m,'geojson_data1':geojson_data1})
-    return render(request,'djangopostgis/uload.html',{'m':m,'geojson_data2':geojson_data2})
+    # return render(request,'djangopostgis/uload.html',{'m':m,'geojson_data2':geojson_data2})
+    return render(request,'djangopostgis/home1.html',{'m':m,'geojson_data2':geojson_data2})
 def readfile(filename):
     global geojson_data
     # li = []
@@ -394,7 +397,7 @@ def india_district(request):
     draw.add_to(m)
     m =m._repr_html_()
     # return render(request,'djangopostgis/distric.html',{'m':m, 'district_data':new_values})
-    return render(request,'djangopostgis/success.html',{'district_data':new_values})
+    return render(request,'djangopostgis/home1.html',{'m':m, 'district_data':district})
    
 def map2_name(request):
     global dist_data
@@ -516,26 +519,26 @@ def map2_name(request):
 #    ]
 # }
 
-def csv_to_geojson(request):
-    li = []
-    with open('static/djangopostgis/file/area1.csv') as csvfile:
-        reader = csv.DictReader(csvfile)
-        for row in reader:
-            d = OrderedDict()
-            d['type'] = 'Feature'
-            d['geometry'] = {
-                'type': 'Point',
-                'coordinates': [float(row['lat']), float(row['long'])]
-            }
-            li.append(d)
+# def csv_to_geojson(request):
+#     li = []
+#     with open('static/djangopostgis/file/area1.csv') as csvfile:
+#         reader = csv.DictReader(csvfile)
+#         for row in reader:
+#             d = OrderedDict()
+#             d['type'] = 'Feature'
+#             d['geometry'] = {
+#                 'type': 'Point',
+#                 'coordinates': [float(row['lat']), float(row['long'])]
+#             }
+#             li.append(d)
 
-    d = OrderedDict()
-    d['type'] = 'FeatureCollection'
-    d['features'] = li
+#     d = OrderedDict()
+#     d['type'] = 'FeatureCollection'
+#     d['features'] = li
 
-    with open('output.json','w') as f:
-        json.dump(d,f,indent=2)
-        print(d)
+#     with open('output.json','w') as f:
+#         json.dump(d,f,indent=2)
+#         print(d)
 def uploadshp(request):
     global geojson_data2
     if request.method=="POST":
@@ -567,3 +570,144 @@ def uploadshp(request):
         return redirect(show_onmap)
             # print(f)
     return render(request,'djangopostgis/uload.html')
+#####upload csv file #########
+def upload_csv(request):
+    context={}
+    global list_of_column, data_data
+    # m = folium.Map(location=[3, -0.219], zoom_start=2)
+   
+    if request.method =='POST':
+        uploaded_file =request.FILES['docfile']
+        # if uploaded_file.name.endswith('.xlsx'):
+        if uploaded_file.name.endswith('.csv'):
+            #save thre file in medisa storage
+            savefile = FileSystemStorage()
+            d = os.getcwd()
+            # this is the name of your csv file
+            name = savefile.save(d+'/media//'+uploaded_file.name, uploaded_file)
+
+           
+            # print(d)
+            file_directory1 =   name
+            print(file_directory1)
+        data_data =readfile2(file_directory1)
+            
+        print("#########")
+        print(data_data)
+        print("#########")
+        return redirect(data_view_onmap2)
+            # return redirect(service)
+        # if(dataDf):
+        #     return redirect(data_view_onmap)
+        # else:
+        #     print("Please upload first file after that you can procced next form...")    
+                
+            # return redirect(data_view_onmap)
+
+
+                
+
+            
+
+            #  return redirect(data_view_onmap)
+            
+            
+    # m= m._repr_html_()
+
+    # context ={
+    #     'm': m,
+        
+    # }
+
+    return render(request, 'djangopostgis/csvfile.html')
+    
+def readfile2(filename):
+    global dataDf
+    # my_file =pd.read_excel(filename)
+    my_file =pd.read_csv(filename)
+    dataDf =pd.DataFrame(data=my_file, index=None)
+    return dataDf
+    # print(dataDf)
+#     list_of_column_names = list(dataDf.columns)
+ 
+# # displaying the list of column names
+#     print('List of column names : ',
+#       list_of_column_names)
+   
+
+def data_view_onmap2(request):
+    # global dataDf
+    global data_data
+    # global list_of_column
+   
+    m = folium.Map(location=[3, -0.219], zoom_start=2)
+        
+    powerPlantsLayer = folium.FeatureGroup(name = 'circle2').add_to(m)
+    # if(list_of_column is True):
+    
+    for i in range(len(data_data)):
+            areaStr = data_data.iloc[i]['area']
+            fuelStr = data_data.iloc[i]['fuel']
+            capVal = data_data.iloc[i]['capacity']
+            # derive the circle color
+            clr = "blue" if fuelStr.lower() == 'wind' else "red"
+            # derive the circle radius
+            radius = capVal*10
+            # derive the circle pop up html content 
+            popUpStr = 'Patient - {0}<br>Type - {1}<br> - {2} TB'.format(
+                areaStr, fuelStr, capVal)
+            folium.Circle(
+                location=[data_data.iloc[i]['lat'], data_data.iloc[i]['lng']],
+                popup=folium.Popup(popUpStr, min_width=100, max_width=700),
+                radius=radius,
+                color=clr,
+                weight=2,
+                fill=True,
+                fill_color=clr,
+                fill_opacity=0.1
+            ).add_to(powerPlantsLayer)
+    legendHtml = '''
+            <div style="position: fixed; 
+            bottom: 50px; left: 50px; width: 150px; height: 70px; 
+            border:2px solid grey; z-index:9999; font-size:14px;
+            ">&nbsp; Fuel Types <br>
+            &nbsp; <i class="fa fa-circle"
+                        style="color:blue"></i> &nbsp; Wind<br>
+            &nbsp; <i class="fa fa-circle"
+                        style="color:red"></i> &nbsp; Solar<br>
+            </div>
+            '''
+
+    # inject html corresponding to the legend into the map
+    m.get_root().html.add_child(folium.Element(legendHtml))
+    #     list_of_column_names = list(dataDf.columns)
+    # # displaying the list of column names
+    #     print('List of column names : ',
+    #       list_of_column_names)
+    
+    m= m._repr_html_()
+
+    context ={
+        #    'list_of_column': list_of_column_names,
+            'm': m,
+        }
+        
+    return render(request, 'djangopostgis/home1.html', context)
+
+
+# def service(request):
+#      global dataDf
+#      m = folium.Map(location=[3, -0.219], zoom_start=2)
+#      context={}
+#      list_of_column_names = list(dataDf.columns)
+# # displaying the list of column names
+#      print('List of column names : ',
+#      list_of_column_names)
+#      m= m._repr_html_()
+
+#      context ={
+#          'list_of_column': list_of_column_names,
+#         'm': m,
+#     }
+#      return render(request, 'djangopostgis/csvfile.html', context)
+   
