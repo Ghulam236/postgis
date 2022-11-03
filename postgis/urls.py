@@ -20,6 +20,8 @@ from djangopostgis import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),
+    path('india', views.india, name='india'),
+    path('blocks', views.blocks, name='blocks'),
     path('country_states', views.country_states, name='country_states'),
     path('map_name', views.map_name),
     path('map2_name', views.map2_name),

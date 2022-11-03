@@ -42,11 +42,11 @@
                   Choose Layer
                 </a>
                 <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="{% url 'country_states' %}">Layer 0</a></li>
-                  <li><a class="dropdown-item" href="{% url 'india_district' %}">Layer 1</a></li>             
-                  <li><a class="dropdown-item" href ="{% url 'country_states' %}">Layer 2</li>
-                  <li><a class="dropdown-item" href="{% url 'country_states' %}">Layer 3</a></li>
-                   <!-- <li><hr class="dropdown-divider"></li> -->
+                  <li><a class="dropdown-item" href="{% url 'india' %}">Layer 0</a></li>
+                  <li><a class="dropdown-item" href="{% url 'country_states' %}">Layer 1</a></li>             
+                  <li><a class="dropdown-item" href ="{% url 'india_district' %}">Layer 2</a></li>
+                  <li><a class="dropdown-item" href="{% url 'blocks' %}">Layer 3</a></li>
+                   <!-- <li><hr class="dropdown-divider"></li> -->   
                 </ul>
               </li>
               <li class="nav-item">
@@ -63,11 +63,11 @@
       <!-- <div class ="container"> -->
         <div class ="row">
           <div class ="col-sm-3 mt-4" style ="border-right: 1px solid burlywood">
-            <form method="POST" enctype="multipart/form-data">
+            <!-- <form method="POST" enctype="multipart/form-data">
               {% csrf_token %}
               <input type="file" name="docfile"><br><br>
               <input type="submit" value="Submit">
-            </form>
+            </form> -->
           <div>
             {{ list_of_column|safe }}</div>
             
@@ -75,8 +75,9 @@
           </div>
           <div class ="col-sm-9 text-white mt-4">
            
-            <div style ="width: 750px;
-            border: 5px solid green;
+            <div style ="width: 939px;
+           
+            border: 3px solid green;
             padding: 5px;
             margin-left: 30px;
             background-repeat : no-repeat;">

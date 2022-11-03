@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect
 import folium
 from folium import plugins
-from djangopostgis.models import Indstates, country
+from djangopostgis.models import Indstates, country,India,Indblocks
 from django.core.serializers import serialize
 import json
 import os
@@ -23,6 +23,24 @@ global geojson_data1,geojson_data2
 # global dataDf
 global data_data
 # Create your views here.
+def india(request):
+    india_data =serialize('geojson',India.objects.all())
+    m= folium.Map(location=(3, -0.219), zoom_start =2)
+    folium.GeoJson(india_data).add_to(m)
+    draw = plugins.Draw(export=True)
+    draw.add_to(m)
+    m =m._repr_html_()
+    return render(request, 'djangopostgis/home1.html', {'m':m, 'india_data':india_data})
+def blocks(request):
+    blocks_data =serialize('geojson',Indblocks.objects.all())
+    m= folium.Map(location=(3, -0.219), zoom_start =2)
+    folium.GeoJson(blocks_data).add_to(m)
+    draw = plugins.Draw(export=True)
+    draw.add_to(m)
+    m =m._repr_html_()
+    return render(request, 'djangopostgis/home1.html', {'m':m, 'blocks_data':blocks_data})
+
+
 def map_name(request):
     state_name = request.POST.get("state_name")
     print(state_name)
