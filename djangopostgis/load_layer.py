@@ -1,6 +1,6 @@
 
 from django.contrib.gis.utils import LayerMapping
-from .models import country,Indstates,India,Indblocks
+from .models import country,Indstates,India,Indblocks,mumbradata
 from pathlib import Path
 
 country_mapping = {
@@ -136,4 +136,15 @@ indblocks_mapping = {
 indblocks_shp = Path(__file__).resolve().parent / 'data' / 'IND_adm3.shp'
 def run(verbose=True):
     lm = LayerMapping(Indblocks, indblocks_shp, indblocks_mapping, transform=False)
+    lm.save(strict=True, verbose=verbose)
+
+mumbradata_mapping = {
+    'fid': 'fid',
+    'begin': 'begin',
+    'end': 'end',
+    'geom': 'POLYGON',
+}
+mumbra_data_shp=Path(__file__).resolve().parent / 'data' / 'area1poly.shp'
+def run(verbose=True):
+    lm = LayerMapping(mumbradata, mumbra_data_shp, mumbradata_mapping, transform=False)
     lm.save(strict=True, verbose=verbose)

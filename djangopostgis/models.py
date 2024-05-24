@@ -146,4 +146,9 @@ class Indblocks(models.Model):
 
 # join tables...
 # class jointable(models.Model):
+class mumbradata(models.Model):
+    fid = models.FloatField()
+    begin = models.CharField(max_length=254)
+    end = models.CharField(max_length=254)
+    geom = models.PolygonField()
 

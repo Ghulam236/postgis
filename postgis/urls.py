@@ -21,14 +21,20 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),
     path('india', views.india, name='india'),
+    path('ind_states', views.ind_states, name='ind_states'),
+    path('ind_district', views.ind_district, name='ind_district'),
     path('blocks', views.blocks, name='blocks'),
+    ###slect specific state and district
     path('country_states', views.country_states, name='country_states'),
+    path('india_district', views.india_district, name ='india_district'),
+    path('ind_blocks', views.ind_blocks, name ='ind_blocks'),    
     path('map_name', views.map_name),
     path('map2_name', views.map2_name),
+    path('map3_name', views.map3_name),
     path('upload_shapefile', views.upload_shapefile),
     path('show_onmap', views.show_onmap) ,
     path('readfile', views.readfile),
-    path('india_district', views.india_district, name ='india_district'),   
+    
     # path('csv_to_geojson', views.csv_to_geojson, name ='csv_to_geojson'),
     path('uploadshp', views.uploadshp, name ='uploadshp'), 
     #####csv data######

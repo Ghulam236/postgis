@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class ="row">
+        <div class ="col-lg-4 text-white mt-4">
+    <form method="POST" action ="/map2_name" enctype="multipart/form-data">
+        {% csrf_token %}
+    
+    <label for="colname1">INDIA:</label>
+    
+    <select id="district_name1" name="district_name" class="custom-select" >
+   
+    <option selected="selected">Select district from dropdown</option>
+    {% for y in dist_dict %}
+    
+    <option value="{{y}}">
+           {{y}}
+    </option>
+    {% endfor %}
+    </select><br>
+    <input style="margin-left: 33px;" type="submit" value="Submit">
+</form>
+</div>
+<div class ="col-lg-8 text-white mt-4">
+       
+    <div style ="width: 750px;
+    border: 5px solid green;
+    padding: 5px;
+    margin-left: 450px;
+    background-repeat : no-repeat;">
+    
+   <!-- {{data}} -->
+   <!-- {{dist_data}} -->
+  {{m|safe}}
+</div>
+</div>
+</div>
+</body>
+</html>

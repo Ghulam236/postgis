@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class ="row">
+        <div class ="col-lg-4 text-white mt-4">
+    <form method="POST" action ="/map3_name" enctype="multipart/form-data">
+        {% csrf_token %}
+    
+    <label for="colname1">INDIA:</label>
+    
+    <select id="block_name" name="block_name" class="custom-select" >
+   
+    <option selected="selected">Select district from dropdown</option>
+    {% for z in block_dict %}
+    
+    <option value="{{z}}">
+           {{z}}
+    </option>
+    {% endfor %}
+    </select><br>
+    <input style="margin-left: 33px;" type="submit" value="Submit">
+</form>
+</div>
+<div class ="col-lg-8 text-white mt-4">
+       
+    <div style ="width: 750px;
+    border: 5px solid green;
+    padding: 5px;
+    margin-left: 450px;
+    background-repeat : no-repeat;">
+    
+   <!-- {{block_dict}} -->
+   <!-- {{blocks}} -->
+  {{m|safe}}
+</div>
+</div>
+</div>
+</body>
+</html>
+<!-- {
+    "type":"FeatureCollection",
+    "crs":{
+       "type":"name",
+       "properties":{
+          "name":"EPSG:4326"
+       }
+    },
+    "features":[
+       {
+          "type":"Feature",
+          "properties":{
+             "id_0":105,
+             "iso":"IND",
+             "name_0":"India",
+             "id_1":1,
+             "name_1":"Andaman and Nicobar",
+             "id_2":1,
+             "name_2":"Andaman Islands",
+             "id_3":1,
+             "name_3":"n.a. ( 2178)",
+             "type_3":"Taluk",
+             "engtype_3":"Taluk",
+             "pk":"1"
+          },
+          "geometry":{
+             "type":"MultiPolygon",
+             "coordinates":[
+                [
+                   [
+                      [
+                         
+                      ]
+                   ]
+                ]
+             ]
+          }
+       }
+    ]
+ } -->

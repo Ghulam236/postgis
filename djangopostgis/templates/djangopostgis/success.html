@@ -47,7 +47,7 @@
         {% endfor %}
         </select><br><br><br>
         <input style="margin-left: 33px;" type="submit" value="Submit">
-        </form>
+        <!-- </form>
         <form method="POST" action ="/map2_name" enctype="multipart/form-data">
             {% csrf_token %}
         
@@ -56,7 +56,7 @@
         <select id="district_name1" name="district_name" class="custom-select" >
        
         <option selected="selected">Select district from dropdown</option>
-        {% for y in dist_data %}
+        {% for y in dist_dict %}
         
         <option value="{{y}}">
                {{y}}
@@ -64,7 +64,7 @@
         {% endfor %}
         </select><br>
         <input style="margin-left: 33px;" type="submit" value="Submit">
-    </form>
+    </form> -->
     <!-- <form method="POST" action ="/" enctype="multipart/form-data">
         {% csrf_token %}
         <input type="file" name="docfile"><br><br>

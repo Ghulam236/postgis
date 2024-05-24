@@ -29,6 +29,17 @@
               </li>
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  choose by name
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="{% url 'country_states' %}">choose statename</a></li>
+                  <li><a class="dropdown-item" href="{% url 'india_district' %}">choose districtname</a></li> 
+                  <li><a class="dropdown-item" href="{% url 'ind_blocks' %}">choose blockname</a></li>                         
+                  
+                </ul>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   Upload file
                 </a>
                 <ul class="dropdown-menu">
@@ -43,8 +54,8 @@
                 </a>
                 <ul class="dropdown-menu">
                   <li><a class="dropdown-item" href="{% url 'india' %}">Layer 0</a></li>
-                  <li><a class="dropdown-item" href="{% url 'country_states' %}">Layer 1</a></li>             
-                  <li><a class="dropdown-item" href ="{% url 'india_district' %}">Layer 2</a></li>
+                  <li><a class="dropdown-item" href="{% url 'ind_states' %}">Layer 1</a></li>             
+                  <li><a class="dropdown-item" href ="{% url 'ind_district' %}">Layer 2</a></li>
                   <li><a class="dropdown-item" href="{% url 'blocks' %}">Layer 3</a></li>
                    <!-- <li><hr class="dropdown-divider"></li> -->   
                 </ul>
@@ -79,11 +90,11 @@
            
             border: 3px solid green;
             padding: 5px;
-            margin-left: 30px;
+            margin-left: 20px;
             background-repeat : no-repeat;">
             <!-- {% if m %} -->
               {{ m|safe}}
-
+                   <!-- {{data}} -->
             <!-- {% else %} -->
               <!-- {{ m2|safe}} -->
             <!-- {% endif %} -->

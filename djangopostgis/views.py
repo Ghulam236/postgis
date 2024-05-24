@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,HttpResponse
 import folium
 from folium import plugins
 from djangopostgis.models import Indstates, country,India,Indblocks
@@ -25,22 +25,79 @@ global data_data
 # Create your views here.
 def india(request):
     india_data =serialize('geojson',India.objects.all())
+    print(india_data)
     m= folium.Map(location=(3, -0.219), zoom_start =2)
+    
     folium.GeoJson(india_data).add_to(m)
     draw = plugins.Draw(export=True)
     draw.add_to(m)
+    export_data =[]
+    # shapesLayer = folium.FeatureGroup(name ='circle1').add_to(m)
+    shapesLayer2 = folium.FeatureGroup(name ='marker').add_to(m)
+    # powerPlantsLayer = folium.FeatureGroup(name = 'circle2').add_to(m)
+    folium.Marker([20.022141, 76.267103],
+    #change marker category
+        icon =folium.Icon(icon="glyphicon-star")).add_to(shapesLayer2)
+    folium.Marker([19.022141, 75.267103],
+        icon =folium.Icon(icon="pencil", prefix='fa', color ='red')).add_to(shapesLayer2)
+    folium.Marker([21.022141, 77.267103],
+        icon =folium.Icon(icon="eye", prefix='fa',color='orange')).add_to(shapesLayer2)
+    folium.LayerControl().add_to(m)
     m =m._repr_html_()
     return render(request, 'djangopostgis/home1.html', {'m':m, 'india_data':india_data})
+
+def ind_states(request):
+
+    ind_states =serialize('geojson',country.objects.all())
+    print(ind_states)
+    m= folium.Map(location=(3, -0.219), zoom_start =2)
+    # folium.GeoJson(ind_states).add_to(m)
+    draw = plugins.Draw(export=True)
+    draw.add_to(m)
+    m =m._repr_html_()
+    context1= {
+        # 'm':m
+    }
+    # context2= {
+    #     'lyr':lyr
+    # }
+    # print(states)
+    return render(request, 'djangopostgis/home1.html', {'states':ind_states, 'm':m})
+
+def ind_district(request):
+
+    ind_district =serialize('geojson',Indstates.objects.all())
+    m= folium.Map(location=(3, -0.219), zoom_start =2)
+    folium.GeoJson(ind_district).add_to(m)
+    draw = plugins.Draw(export=True)
+    draw.add_to(m)
+    m =m._repr_html_()
+    context1= {
+        # 'm':m
+    }
+    # context2= {
+    #     'lyr':lyr
+    # }
+    # print(states)
+    return render(request, 'djangopostgis/home1.html', {'ind_district':ind_district, 'm':m})
+
+
 def blocks(request):
     blocks_data =serialize('geojson',Indblocks.objects.all())
+
     m= folium.Map(location=(3, -0.219), zoom_start =2)
     folium.GeoJson(blocks_data).add_to(m)
     draw = plugins.Draw(export=True)
     draw.add_to(m)
     m =m._repr_html_()
     return render(request, 'djangopostgis/home1.html', {'m':m, 'blocks_data':blocks_data})
+# def block_database(request,pk):
 
-
+    
+#     blockmodel =Indblocks(id_0=id_0,name_0=name_0,id_1=id_1,name_1=name_1,
+#     id_2=id_2,name_2=name_2,id_3=id_3,name_3=name_3,type_3=type_3,engtype_3=engtype_3,
+#     geom=geom)
+#     return HttpResponse(request,"Data save successfully")
 def map_name(request):
     state_name = request.POST.get("state_name")
     print(state_name)
@@ -258,7 +315,7 @@ def country_states(request):
     # final_data=json.dumps(my_dict)
     # return redirect(india_district)
     m= folium.Map(location=(3, -0.219), zoom_start =2)
-    folium.GeoJson(states).add_to(m)
+    folium.GeoJson(my_dict).add_to(m)
     draw = plugins.Draw(export=True)
     draw.add_to(m)
     m =m._repr_html_()
@@ -270,7 +327,7 @@ def country_states(request):
     # }
     # print(states)
     # return render(request, 'djangopostgis/success.html', {'states':states,  'states_data': states_data, 'm':m})
-    return render(request, 'djangopostgis/home1.html',{'m':m,'data':my_dict, 'dist_data':dist_dict})
+    return render(request, 'djangopostgis/success.html',{'m':m,'data':my_dict})
     # return render(request, 'djangopostgis/success.html',{'m':m,'data':states})
 
 def upload_shapefile(request):
@@ -405,23 +462,23 @@ def india_district(request):
     for i in range(len(district_names)):
         dist_dict[district_names[i]] = district_geometry_crs[i]
 
-    # sorted_keys =   dist_dict.items()
+    sorted_keys =   dist_dict.items()
     new_values =sorted(dist_dict.keys())
     
     # print(new_values)
     m= folium.Map(location=(3, -0.219), zoom_start =2)
-    folium.GeoJson(district).add_to(m)
+    folium.GeoJson(dist_dict).add_to(m)
     draw = plugins.Draw(export=True)
     draw.add_to(m)
     m =m._repr_html_()
     # return render(request,'djangopostgis/distric.html',{'m':m, 'district_data':new_values})
-    return render(request,'djangopostgis/home1.html',{'m':m, 'district_data':district})
+    return render(request,'djangopostgis/inddistrict.html',{'m':m, 'dist_dict':new_values})
    
 def map2_name(request):
     global dist_data
     district_name = request.POST.get('district_name')
     # print(state_name)
-    ind = dist_data.index(district_name)
+    ind = district_names.index(district_name)
   
     data_2  ={
    "type":"FeatureCollection",
@@ -497,6 +554,88 @@ def map2_name(request):
         'm':m
     }
     return render(request, 'djangopostgis/final2_map.html', context)
+def ind_blocks(request):
+     blocks =serialize('geojson',Indblocks.objects.all())
+     blocks =json.loads(blocks)
+     global blocks_name,blocks_geometry_crs
+     blocks_name=[]
+     blocks_geometry_crs=[]
+     for z in blocks['features']:
+        blocks_name.append(z['properties']['name_3'])
+        blocks_geometry_crs.append(z['geometry']['coordinates'])
+     block_dict={}
+     for i in range(len(blocks_name)):
+        block_dict[blocks_name[i]] = blocks_geometry_crs[i]
+     sorted_keys =   block_dict.items()
+     new_values =sorted(block_dict.keys())
+    
+    # print(new_values)
+     m= folium.Map(location=(3, -0.219), zoom_start =2)
+     folium.GeoJson(block_dict).add_to(m)
+     draw = plugins.Draw(export=True)
+     draw.add_to(m)
+     m =m._repr_html_()
+    # return render(request,'djangopostgis/distric.html',{'m':m, 'district_data':new_values})
+     return render(request,'djangopostgis/indblock.html',{'m':m, 'block_dict':new_values})
+    
+def map3_name(request):
+    global blocks_name
+    block_name = request.POST.get('block_name')
+    # print(state_name)
+    ind = blocks_name.index(block_name)
+
+
+    data_3= {
+   "type":"FeatureCollection",
+   "crs":{
+      "type":"name",
+      "properties":{
+         "name":"EPSG:4326"
+      }
+   },
+   "features":[
+      {
+         "type":"Feature",
+         "properties":{
+            "id_0":105,
+            "iso":"IND",
+            "name_0":"India",
+            "id_1":1,
+            "name_1":"Andaman and Nicobar",
+            "id_2":1,
+            "name_2":"Andaman Islands",
+            "id_3":1,
+            "name_3":block_name,
+            "type_3":"Taluk",
+            "engtype_3":"Taluk",
+            "pk":"1"
+         },
+         "geometry":{
+            "type":"MultiPolygon",
+            "coordinates":blocks_geometry_crs[ind]
+         }
+      }
+   ]
+}
+
+    m= folium.Map(location=(3, -0.219), zoom_start =2)
+   
+    draw = plugins.Draw(export=True)
+    draw.add_to(m)
+    # folium.Marker(
+    # [21.493963918393746, 81.51855520970668]).add_to(m)
+    folium.GeoJson(data_3).add_to(m)
+    # folium.GeoJson(data_to_json).add_to(m)
+  
+    m =m._repr_html_()
+    context= {
+        'm':m
+    }
+    return render(request, 'djangopostgis/final3_map.html', context)
+   
+
+    
+
 
 #     {
 #    "type":"FeatureCollection",
